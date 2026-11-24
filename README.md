@@ -62,7 +62,7 @@ O instalador copia `agents/ux-review.md` para `~/.claude/agents/` e `suporte/` p
 Linux, macOS ou Git Bash:
 
 ```bash
-git clone <url-deste-repositório> ux-review
+git clone https://github.com/railson-is/ux-review.git
 cd ux-review
 ./instalar.sh
 ```
@@ -70,7 +70,7 @@ cd ux-review
 Windows (PowerShell):
 
 ```powershell
-git clone <url-deste-repositório> ux-review
+git clone https://github.com/railson-is/ux-review.git
 cd ux-review
 powershell -ExecutionPolicy Bypass -File .\instalar.ps1
 ```
