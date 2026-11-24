@@ -1,0 +1,22 @@
+{
+  "name": "ux-review",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Subagente do Claude Code que revisa UX e acessibilidade com prova medida.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "testar": "node --test testes/guarda.test.mjs testes/contraste.test.mjs testes/validar.test.mjs",
+    "banco:servir": "node banco-de-provas/banco.mjs servir",
+    "banco:calibrar": "node banco-de-provas/banco.mjs calibrar",
+    "banco:avaliar": "node banco-de-provas/banco.mjs avaliar",
+    "banco:pedido": "node banco-de-provas/banco.mjs pedido"
+  },
+  "devDependencies": {
+    "axe-core": "4.14.0",
+    "playwright": "1.65.1"
+  }
+}

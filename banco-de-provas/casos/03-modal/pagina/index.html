@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caso 03: janelas modais</title>
+<style>
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #1a1a1a; background: #ffffff; }
+  main { max-width: 40rem; margin: 0 auto; padding: 1rem; }
+  :focus-visible { outline: 3px solid #1a1a1a; outline-offset: 2px; }
+  button { padding: 12px 20px; font-size: 16px; margin: 8px 8px 8px 0; }
+  a { color: #0645ad; }
+  .fundo { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); }
+  .fundo.aberto { display: block; }
+  .caixa { position: fixed; top: 15%; left: 50%; transform: translateX(-50%); width: min(90vw, 28rem); background: #ffffff; padding: 24px; box-sizing: border-box; border-radius: 6px; }
+  .fechar { position: absolute; top: 4px; right: 8px; font-size: 28px; line-height: 1; padding: 4px 8px; cursor: pointer; color: #1a1a1a; }
+  dialog { width: min(90vw, 28rem); padding: 24px; border: 0; border-radius: 6px; box-sizing: border-box; }
+  dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Planos</h1>
+  <p>Compare os planos e veja os detalhes de cada um.</p>
+  <button type="button" id="abrir-detalhes" data-bp="g1">Ver detalhes do plano básico</button>
+  <button type="button" id="abrir-ajuda" data-bp="t2">Como funciona a cobrança</button>
+  <p><a href="#termos">Termos de uso</a> e <a href="#privacidade">privacidade</a>.</p>
+</main>
+
+<div class="fundo" id="detalhes" data-bp="m1">
+  <div class="caixa">
+    <span class="fechar" id="fechar-detalhes" data-bp="c2">&times;</span>
+    <h2>Plano básico</h2>
+    <p>Inclui duas contas e suporte por e-mail.</p>
+    <button type="button" id="entendi">Entendi</button>
+  </div>
+</div>
+
+<dialog id="ajuda" aria-labelledby="ajuda-titulo" data-bp="t1">
+  <h2 id="ajuda-titulo">Como funciona a cobrança</h2>
+  <p>A cobrança é mensal, sempre no dia em que você assinou.</p>
+  <button type="button" id="fechar-ajuda">Fechar</button>
+</dialog>
+
+<script>
+  const detalhes = document.getElementById('detalhes');
+  const fecharDetalhes = () => detalhes.classList.remove('aberto');
+  document.getElementById('abrir-detalhes').addEventListener('click', () => detalhes.classList.add('aberto'));
+  document.getElementById('fechar-detalhes').addEventListener('click', fecharDetalhes);
+  document.getElementById('entendi').addEventListener('click', fecharDetalhes);
+
+  const ajuda = document.getElementById('ajuda');
+  const abrirAjuda = document.getElementById('abrir-ajuda');
+  abrirAjuda.addEventListener('click', () => ajuda.showModal());
+  document.getElementById('fechar-ajuda').addEventListener('click', () => ajuda.close());
+  ajuda.addEventListener('close', () => abrirAjuda.focus());
+</script>
+</body>
+</html>

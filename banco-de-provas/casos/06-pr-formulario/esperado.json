@@ -1,0 +1,17 @@
+{
+  "caso": "06-pr-formulario",
+  "modo": "3-revisao-de-pr",
+  "arquivoDiff": "mudanca.diff",
+  "contexto": "O formulário fica sobre fundo #ffffff (regra .formulario, linha 4 do CSS, fora do trecho alterado).",
+  "defeitos": [
+    { "id": "e1", "criterios": ["2.4.7"], "arquivo": "src/components/FormularioContato.css", "linhas": [14, 16], "nota": "outline: none no foco do botão, sem outro indicador" },
+    { "id": "e2", "criterios": ["3.3.2", "1.3.1", "NN/g"], "arquivo": "src/components/FormularioContato.jsx", "linhas": [10, 18], "nota": "rótulo visível removido; o placeholder vira o único rótulo e some ao digitar" },
+    { "id": "e3", "criterios": ["2.1.1", "4.1.2"], "arquivo": "src/components/FormularioContato.jsx", "linhas": [20, 20], "nota": "botão de envio trocado por div com onClick: sem foco, sem papel, sem Enter" },
+    { "id": "e4", "criterios": ["1.4.3"], "arquivo": "src/components/FormularioContato.css", "linhas": [18, 20], "nota": "mensagem de erro #ff6b6b sobre #ffffff, 14px: 2,77:1" }
+  ],
+  "armadilhas": [
+    { "id": "t1", "arquivo": "src/components/FormularioContato.jsx", "linhas": [6, 7], "nota": "troca de nome de variável, sem efeito para quem usa" },
+    { "id": "t2", "arquivo": "src/components/FormularioContato.jsx", "linhas": [21, 21], "nota": "aria-label adicionado ao botão de ícone: melhora" },
+    { "id": "t3", "arquivo": "src/components/FormularioContato.css", "linhas": [22, 26], "nota": "nova regra .formulario-aviso #b00020 sobre #ffffff: 7,3:1, passa" }
+  ]
+}

@@ -1,0 +1,9 @@
+node_modules/
+revisoes/
+banco-de-provas/resultados/
+*.log
+.env
+.env.*
+estado-*.json
+.DS_Store
+Thumbs.db

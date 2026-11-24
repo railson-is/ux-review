@@ -1,0 +1,20 @@
+{
+  "caso": "01-contraste",
+  "modo": "2-auditoria-wcag",
+  "caminho": "/01-contraste/",
+  "larguras": [320, 1280],
+  "defeitos": [
+    { "id": "a1", "criterios": ["1.4.3"], "nota": "texto #999999 sobre #ffffff, 16px normal: 2,84:1" },
+    { "id": "a2", "criterios": ["1.4.3"], "nota": "texto #ffffff sobre #ff8c00, 16px normal: 2,33:1" },
+    { "id": "a3", "criterios": ["1.4.3"], "nota": "placeholder #aaaaaa sobre #ffffff: 2,32:1" },
+    { "id": "a4", "criterios": ["1.4.11"], "nota": "ícone do botão Buscar com traço #c0c0c0 sobre #ffffff: 1,8:1" }
+  ],
+  "armadilhas": [
+    { "id": "t1", "nota": "24px normal, #949494 sobre branco: 3,03:1, texto grande, passa" },
+    { "id": "t2", "nota": "19px negrito, #949494: texto grande (14 pt negrito), passa" },
+    { "id": "t3", "nota": "botão desabilitado: componente inativo, isento" },
+    { "id": "t4", "nota": "#767676 sobre branco: 4,54:1, passa" },
+    { "id": "t5", "nota": "branco sobre rgba(0,0,0,0.75) em cima de branco: fundo efetivo #404040, passa" },
+    { "id": "t6", "nota": "texto visualmente oculto (só leitor de tela): sem requisito de contraste" }
+  ]
+}

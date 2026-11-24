@@ -1,0 +1,58 @@
+diff --git a/src/components/FormularioContato.css b/src/components/FormularioContato.css
+index 3b1c2d4..8e9f0a1 100644
+--- a/src/components/FormularioContato.css
++++ b/src/components/FormularioContato.css
+@@ -12,11 +12,15 @@
+ }
+ 
+ .formulario-botao:focus-visible {
+-  outline: 3px solid #1a1a1a;
+-  outline-offset: 2px;
++  outline: none;
+ }
+ 
+ .formulario-erro {
+-  color: #b00020;
++  color: #ff6b6b;
+   font-size: 14px;
+ }
++
++.formulario-aviso {
++  color: #b00020;
++  font-size: 14px;
++}
+diff --git a/src/components/FormularioContato.jsx b/src/components/FormularioContato.jsx
+index 5d6e7f8..9a0b1c2 100644
+--- a/src/components/FormularioContato.jsx
++++ b/src/components/FormularioContato.jsx
+@@ -3,22 +3,22 @@ import { IconeLixeira } from './Icones';
+ import './FormularioContato.css';
+ 
+ export function FormularioContato({ onEnviar, erro }) {
+-  const [valor, setValor] = useState('');
+-  const limpar = () => setValor('');
++  const [email, setEmail] = useState('');
++  const limpar = () => setEmail('');
+ 
+   return (
+-    <form className="formulario" onSubmit={(e) => { e.preventDefault(); onEnviar(valor); }}>
+-      <label htmlFor="contato-email">E-mail</label>
++    <form className="formulario" onSubmit={(e) => { e.preventDefault(); onEnviar(email); }}>
+       <input
+         id="contato-email"
+         type="email"
+         autoComplete="email"
+-        value={valor}
+-        onChange={(e) => setValor(e.target.value)}
++        placeholder="E-mail"
++        value={email}
++        onChange={(e) => setEmail(e.target.value)}
+       />
+       {erro && <p className="formulario-erro">{erro}</p>}
+-      <button type="submit" className="formulario-botao">Enviar</button>
+-      <button type="button" className="formulario-icone" onClick={limpar}>
++      <div className="formulario-botao" onClick={() => onEnviar(email)}>Enviar</div>
++      <button type="button" className="formulario-icone" aria-label="Limpar campo" onClick={limpar}>
+         <IconeLixeira />
+       </button>
+     </form>

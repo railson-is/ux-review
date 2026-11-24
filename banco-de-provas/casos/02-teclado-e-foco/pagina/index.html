@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caso 02: teclado e foco</title>
+<style>
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #1a1a1a; background: #ffffff; }
+  main { max-width: 40rem; margin: 0 auto; padding: 1rem 1rem 0; }
+  a { color: #0645ad; }
+  :focus-visible { outline: 3px solid #1a1a1a; outline-offset: 2px; }
+  .pular { position: absolute; left: -10000px; top: 0; background: #1a1a1a; color: #ffffff; padding: 8px; }
+  .pular:focus { left: 8px; }
+  .sem-foco:focus, .sem-foco:focus-visible { outline: none; }
+  .sombra:focus-visible { outline: none; box-shadow: 0 0 0 3px #1a1a1a; }
+  .falso-botao, .botao-aria { display: inline-block; background: #1a1a1a; color: #ffffff; padding: 12px 20px; cursor: pointer; margin: 4px 0; }
+  label { display: block; margin-top: 12px; }
+  input { display: block; padding: 10px; font-size: 16px; border: 2px solid #595959; margin-top: 4px; }
+  button { padding: 12px 20px; font-size: 16px; margin-top: 16px; }
+  .longo p { margin: 0 0 1em; }
+  .longo p:last-child { margin-bottom: 4px; }
+  .aviso { position: fixed; left: 0; right: 0; bottom: 0; height: 120px; background: #1a1a1a; color: #ffffff; padding: 16px; box-sizing: border-box; }
+  .aviso button { margin-top: 8px; }
+  .aviso button:focus-visible { outline-color: #ffffff; }
+</style>
+</head>
+<body>
+<a class="pular" href="#conteudo" data-bp="t3">Pular para o conteúdo</a>
+<main id="conteudo">
+  <h1>Minha conta</h1>
+  <p>
+    <a href="#ajuda" class="sem-foco" data-bp="b2">Central de ajuda</a> |
+    <a href="#perfil" class="sombra" data-bp="t1">Editar perfil</a>
+  </p>
+  <p>
+    <span class="falso-botao" data-bp="b1" id="gerar">Gerar relatório</span>
+    <span class="botao-aria" role="button" tabindex="0" data-bp="t4" id="atualizar">Atualizar lista</span>
+  </p>
+  <p id="status" role="status"></p>
+  <form action="#" id="endereco">
+    <h2>Alterar endereço</h2>
+    <label for="cep">CEP</label>
+    <input id="cep" autocomplete="postal-code">
+    <label for="rua">Rua</label>
+    <input id="rua" autocomplete="address-line1">
+    <label for="numero">Número</label>
+    <input id="numero">
+    <button type="submit" tabindex="1" data-bp="b3">Salvar endereço</button>
+  </form>
+  <div class="longo">
+    <h2>Perguntas frequentes</h2>
+    <p>Como altero meu e-mail? Acesse a página de perfil e escolha a opção de alterar e-mail.</p>
+    <p>Posso ter mais de um endereço? Sim, cadastre quantos quiser e escolha um como principal.</p>
+    <p>Como excluo minha conta? Fale com o atendimento pelo canal de ajuda.</p>
+    <p>Quanto tempo leva para atualizar? As mudanças valem na hora.</p>
+    <p>Onde vejo meus pedidos? Na seção de pedidos, no menu principal.</p>
+    <p>Esqueci a senha, e agora? Use a opção de recuperar senha na tela de entrada.</p>
+    <p>Recebo avisos por e-mail? Só se você ativar nas preferências.</p>
+    <p>Meus dados são compartilhados? Não, ficam restritos ao serviço.</p>
+    <p>Consigo exportar meus dados? Sim, pela página de privacidade.</p>
+    <p>Posso mudar o idioma? Sim, nas preferências da conta.</p>
+    <p>Há aplicativo para celular? Não, o serviço funciona pelo navegador.</p>
+    <p>Posso pausar a conta? Sim, por até três meses, sem perder os dados.</p>
+    <p>Como troco a forma de contato? Nas preferências, escolha e-mail ou telefone.</p>
+    <p>O que acontece se eu mudar de cidade? Atualize o endereço e o resto continua igual.</p>
+    <p>Recebo comprovante das alterações? Sim, um resumo chega por e-mail.</p>
+    <p>Posso cadastrar outra pessoa? Não, cada conta é individual.</p>
+    <p>Como sei que a alteração deu certo? Uma mensagem aparece logo abaixo do botão.</p>
+    <p>Atendimento de segunda a sexta, das 8h às 18h.</p>
+    <p>Respostas em até dois dias úteis.</p>
+    <p>Mais dúvidas? <a href="#privacidade" data-bp="b4">Leia a política de privacidade</a>.</p>
+  </div>
+</main>
+<div class="aviso" role="region" aria-label="Aviso de cookies">
+  Usamos cookies essenciais para manter sua sessão.
+  <button type="button">Entendi</button>
+</div>
+<script>
+  const status = document.getElementById('status');
+  document.getElementById('gerar').addEventListener('click', () => { status.textContent = 'Relatório gerado.'; });
+  const atualizar = document.getElementById('atualizar');
+  atualizar.addEventListener('click', () => { status.textContent = 'Lista atualizada.'; });
+  atualizar.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); atualizar.click(); }
+  });
+  document.getElementById('endereco').addEventListener('submit', (e) => { e.preventDefault(); status.textContent = 'Endereço salvo.'; });
+</script>
+</body>
+</html>

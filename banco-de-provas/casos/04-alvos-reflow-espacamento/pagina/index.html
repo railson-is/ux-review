@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caso 04: alvos, reflow e espaçamento</title>
+<style>
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #1a1a1a; background: #ffffff; }
+  main { max-width: 60rem; margin: 0 auto; padding: 1rem; }
+  :focus-visible { outline: 3px solid #1a1a1a; outline-offset: 2px; }
+  a { color: #0645ad; }
+  .ferramentas { display: flex; gap: 4px; margin: 16px 0; }
+  .ferramentas button { width: 16px; height: 16px; padding: 0; border: 1px solid #1a1a1a; background: #ffffff; font-size: 10px; line-height: 1; }
+  .isolado { margin: 40px 0 40px 40px; }
+  .isolado button { width: 20px; height: 20px; padding: 0; border: 1px solid #1a1a1a; background: #ffffff; font-size: 12px; line-height: 1; }
+  .faixa-fixa { width: 600px; background: #f2f2f2; padding: 12px; box-sizing: border-box; }
+  .tabela-rolavel { overflow-x: auto; margin: 16px 0; }
+  table { border-collapse: collapse; min-width: 640px; }
+  th, td { border: 1px solid #595959; padding: 6px 10px; text-align: left; }
+  .etiqueta { height: 20px; overflow: hidden; width: 220px; background: #f2f2f2; margin: 16px 0; }
+  .cartao { height: 120px; width: 260px; background: #f2f2f2; padding: 8px; box-sizing: border-box; margin: 16px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Pedidos</h1>
+  <div class="ferramentas" role="toolbar" aria-label="Formatação" data-bp="d1">
+    <button type="button" aria-label="Negrito">B</button>
+    <button type="button" aria-label="Itálico">I</button>
+    <button type="button" aria-label="Sublinhado">U</button>
+  </div>
+  <p>Para dúvidas sobre prazos, consulte a <a href="#prazos" data-bp="t1">tabela de prazos</a> antes de abrir um chamado.</p>
+  <div class="isolado"><button type="button" aria-label="Atualizar" data-bp="t2">&#x21bb;</button></div>
+  <div class="faixa-fixa" data-bp="d2">Entrega grátis para pedidos acima de cem reais em todo o país, por tempo limitado.</div>
+  <div class="tabela-rolavel" data-bp="t3" tabindex="0" role="region" aria-label="Tabela de prazos">
+    <table>
+      <caption>Prazos de entrega por região</caption>
+      <thead><tr><th scope="col">Região</th><th scope="col">Prazo</th><th scope="col">Custo</th><th scope="col">Transportadora</th></tr></thead>
+      <tbody>
+        <tr><td>Norte</td><td>8 dias úteis</td><td>R$ 30</td><td>Transportadora A</td></tr>
+        <tr><td>Sul</td><td>4 dias úteis</td><td>R$ 18</td><td>Transportadora B</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="etiqueta" data-bp="d3">Status: em separação</div>
+  <div class="cartao" data-bp="t4">Pedido 1234. Entrega prevista para sexta.</div>
+</main>
+</body>
+</html>

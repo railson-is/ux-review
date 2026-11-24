@@ -1,0 +1,9 @@
+{
+  "caso": "05-pagina-sem-defeitos",
+  "modo": "2-auditoria-wcag",
+  "caminho": "/05-pagina-sem-defeitos/",
+  "larguras": [320, 1280],
+  "defeitos": [],
+  "armadilhas": [],
+  "nota": "Página sem defeitos WCAG 2.2 AA conhecidos. Qualquer defeito relatado conta como falso positivo."
+}

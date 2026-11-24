@@ -1,0 +1,17 @@
+{
+  "caso": "04-alvos-reflow-espacamento",
+  "modo": "2-auditoria-wcag",
+  "caminho": "/04-alvos-reflow-espacamento/",
+  "larguras": [320, 1280],
+  "defeitos": [
+    { "id": "d1", "criterios": ["2.5.8"], "nota": "três botões de 16x16px separados por 4px: os círculos de 24px se cruzam" },
+    { "id": "d2", "criterios": ["1.4.10"], "nota": "faixa com largura fixa de 600px: rolagem horizontal em 320px" },
+    { "id": "d3", "criterios": ["1.4.12"], "nota": "etiqueta com altura fixa de 20px e overflow hidden: texto cortado com o espaçamento de 1.4.12" }
+  ],
+  "armadilhas": [
+    { "id": "t1", "nota": "link dentro de frase: exceção Inline de 2.5.8" },
+    { "id": "t2", "nota": "botão de 20x20px isolado: exceção de espaçamento de 2.5.8" },
+    { "id": "t3", "nota": "tabela de dados em área com rolagem própria: conteúdo bidimensional, exceção de 1.4.10" },
+    { "id": "t4", "nota": "cartão com altura fixa, mas com folga: o texto cabe com o espaçamento de 1.4.12" }
+  ]
+}

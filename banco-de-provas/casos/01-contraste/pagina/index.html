@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caso 01: contraste</title>
+<style>
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #1a1a1a; background: #ffffff; }
+  main { max-width: 40rem; margin: 0 auto; padding: 1rem; }
+  .apagado { color: #999999; }
+  .cta { background: #ff8c00; color: #ffffff; border: 0; padding: 12px 20px; font-size: 16px; border-radius: 4px; }
+  .campo { display: block; margin: 8px 0 16px; padding: 10px; font-size: 16px; border: 2px solid #595959; border-radius: 4px; width: 100%; box-sizing: border-box; }
+  .campo::placeholder { color: #aaaaaa; }
+  .icone { background: #ffffff; border: 0; padding: 10px; width: 44px; height: 44px; }
+  .icone svg { stroke: #c0c0c0; }
+  .titulo-grande { font-size: 24px; font-weight: 400; color: #949494; }
+  .destaque { font-size: 19px; font-weight: 700; color: #949494; }
+  .inativo { background: #f0f0f0; color: #aaaaaa; border: 1px solid #cccccc; padding: 12px 20px; font-size: 16px; }
+  .ok { color: #767676; }
+  .faixa { background: rgba(0, 0, 0, 0.75); color: #ffffff; padding: 12px; }
+  .so-leitor { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; color: #cccccc; }
+  :focus-visible { outline: 3px solid #1a1a1a; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Cadastro na newsletter</h1>
+  <p class="apagado" data-bp="a1">Enviamos uma mensagem por semana. Você pode cancelar quando quiser.</p>
+  <h2 class="titulo-grande" data-bp="t1">Receba novidades</h2>
+  <p class="destaque" data-bp="t2">Sem custo e sem propaganda.</p>
+  <p class="ok" data-bp="t4">Seus dados ficam só com a gente.</p>
+  <form action="#" onsubmit="return false">
+    <label for="email">E-mail</label>
+    <input class="campo" id="email" type="email" autocomplete="email" placeholder="nome@exemplo.com" data-bp="a3">
+    <button class="cta" type="submit" data-bp="a2">Assinar</button>
+    <button class="inativo" type="button" disabled data-bp="t3">Assinar depois</button>
+  </form>
+  <p>
+    <button class="icone" type="button" aria-label="Buscar" data-bp="a4">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7"/><line x1="15" y1="15" x2="22" y2="22"/></svg>
+    </button>
+  </p>
+  <p class="faixa" data-bp="t5">Oferta válida para todo o mês.</p>
+  <span class="so-leitor" data-bp="t6">Texto apenas para leitores de tela.</span>
+</main>
+</body>
+</html>

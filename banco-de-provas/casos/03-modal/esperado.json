@@ -1,0 +1,16 @@
+{
+  "caso": "03-modal",
+  "modo": "2-auditoria-wcag",
+  "caminho": "/03-modal/",
+  "larguras": [320, 1280],
+  "pedido": "Audite também as duas janelas: 'Ver detalhes do plano básico' e 'Como funciona a cobrança'.",
+  "defeitos": [
+    { "id": "c1", "alvos": ["m1", "g1"], "criterios": ["2.4.3"], "nota": "ao abrir, o foco fica no botão de origem e o Tab percorre a página por trás da janela" },
+    { "id": "c2", "alvos": ["c2", "m1"], "criterios": ["2.1.1"], "nota": "o X de fechar é um span sem foco e Esc não fecha (o botão Entendi fecha, mas o foco não chega nele antes de passar pela página)" },
+    { "id": "c3", "alvos": ["m1"], "criterios": ["4.1.2", "1.3.1"], "nota": "a janela não tem papel de diálogo nem nome acessível" }
+  ],
+  "armadilhas": [
+    { "id": "t1", "nota": "dialog nativo com showModal: foco entra, Esc fecha, foco volta ao botão, tem nome" },
+    { "id": "t2", "nota": "botão que abre o dialog correto" }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "caso": "02-teclado-e-foco",
+  "modo": "2-auditoria-wcag",
+  "caminho": "/02-teclado-e-foco/",
+  "larguras": [320, 1280],
+  "defeitos": [
+    { "id": "b1", "criterios": ["2.1.1", "4.1.2"], "nota": "span com clique, sem tabindex nem papel: não recebe foco pelo teclado" },
+    { "id": "b2", "criterios": ["2.4.7"], "nota": "link com outline: none no foco e nenhuma outra mudança visual" },
+    { "id": "b3", "criterios": ["2.4.3"], "nota": "botão Salvar com tabindex=1: recebe foco antes de todos os campos do formulário" },
+    { "id": "b4", "criterios": ["2.4.11"], "nota": "link no fim das perguntas fica inteiro sob o aviso fixo de 120px ao receber foco" }
+  ],
+  "armadilhas": [
+    { "id": "t1", "nota": "foco indicado por box-shadow, sem outline: foco visível" },
+    { "id": "t3", "nota": "link de pular fora da tela até receber foco: comportamento correto" },
+    { "id": "t4", "nota": "span com role=button, tabindex=0 e Enter/Espaço: operável por teclado" }
+  ]
+}
