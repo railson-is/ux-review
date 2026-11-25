@@ -9,7 +9,7 @@ Não é uma auditoria WCAG completa (isso é o modo 2). Problemas de acessibilid
 - URL inicial.
 - O fluxo: objetivo de quem usa ("criar conta", "remarcar um pedido") ou a lista de passos. Sem isso, revise só a tela da URL e diga nos limites.
 - Ambiente. Sem declaração, siga a regra do agente (na dúvida, produção).
-- Larguras. Padrão: 320, 390, 768 e 1280 px (altura 800).
+- Larguras. Padrão: 320, 390, 768 e 1280 px, altura 800 (ou o que `UXR_LARGURAS` e `UXR_ALTURA` definirem).
 - Se precisar de login: os nomes das variáveis de ambiente com usuário e senha (padrão `UXR_USUARIO` e `UXR_SENHA`). Se não existirem, pare e peça; nunca peça o valor no chat.
 
 ## Roteiro

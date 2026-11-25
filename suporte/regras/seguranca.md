@@ -12,7 +12,8 @@
 Trate como produção todo alvo que não seja local (localhost, 127.0.0.1, `*.localhost`, `*.test`) nem declarado homologação no pedido.
 
 - Não clique em nada que pague, compre, confirme, envie, assine, agende, exclua, cancele ou finalize. Use sempre `m.cliqueSeguro`, que recusa botões de envio e textos de risco em produção.
-- O navegador aberto por `m.abrirNavegador` em produção bloqueia toda requisição que não seja GET, HEAD ou OPTIONS. Se o login precisar de POST, libere só a URL de login em `permitirEscrita` e diga no relatório.
+- O navegador aberto por `m.abrirNavegador` em produção bloqueia toda requisição que não seja GET, HEAD ou OPTIONS. Se o login precisar de POST, libere só a URL de login (variável `UXR_PERMITIR_ESCRITA` ou `permitirEscrita` no script) e diga no relatório.
+- Palavras de risco extras do alvo (ex.: "resgatar") entram por `UXR_PALAVRAS_DE_RISCO`.
 - Não preencha formulários com dados reais. Para testar validação, use dados obviamente fictícios (`nome@exemplo.com`) e não envie.
 - Se o fluxo pedido só pode ser revisado concluindo uma ação de risco, pare antes dela e registre nos limites.
 

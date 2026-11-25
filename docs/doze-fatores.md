@@ -1,0 +1,18 @@
+# Os 12 fatores no ux-review
+
+Referência: [The Twelve-Factor App](https://12factor.net/pt_br/), de Adam Wiggins. A metodologia foi escrita para serviços web (software como serviço). O ux-review é um agente com scripts de linha de comando, então alguns fatores se aplicam inteiros, outros em parte e dois quase nada. A tabela diz qual é qual, sem forçar.
+
+| Fator | Como se aplica aqui |
+|---|---|
+| **I. Base de código** | Um repositório, muitas instalações. Cada instalação grava a versão em `<destino>/ux-review/.versao`, e cada medida registra `versoes.uxReview`, então todo relatório diz de qual versão veio. |
+| **II. Dependências** | Tudo declarado com versão exata e lockfile: `suporte/package.json` (axe-core e Playwright, que fixa a versão do Chromium) e `package.json` da raiz (as mesmas versões, para os testes). A CLI não tem dependência de execução, só módulos do Node. `.npmrc` fixa o registro público. `ux-review verificar` confere se o que está instalado bate com o declarado. |
+| **III. Configurações** | Tudo o que muda entre máquinas ou usos vem do ambiente: larguras, altura, tempo limite, URLs liberadas para escrita em produção, palavras de risco, credenciais e a pasta de destino. Valor inválido interrompe na hora, com a variável e o motivo. `ux-review config` mostra o que está em vigor sem mostrar credenciais. Lista completa no README. |
+| **IV. Serviços de apoio** | O site revisado, o GitHub (modo 3), o Figma (modo 4) e o PostHog (opcional) são recursos ligados por URL, `gh` ou conector MCP. Trocar um por outro é configuração, não código. |
+| **V. Construa, lance, execute** | Construção: `npm pack` com a lista `files` do `package.json`. Lançamento: versão no `package.json`, entrada no `CHANGELOG.md` e tag `vX.Y.Z` no Git; a instalação fixada usa `npx github:railson-is/ux-review#vX.Y.Z instalar`. Execução: o agente no Claude Code. Os arquivos instalados não são editados depois; mudança entra por nova versão. |
+| **VI. Processos** | Os scripts não guardam estado entre execuções. O que precisa durar fica em lugares explícitos: a pasta `revisoes/` (saída de cada revisão) e a memória do agente. Por isso o modo 5 (reteste) roda de novo o mesmo script e compara. |
+| **VII. Vínculo de porta** | Quase não se aplica: o ux-review não é um serviço. O único servidor é o do banco de provas, que recebe a porta por `--porta` ou pela variável `PORT`. |
+| **VIII. Concorrência** | Quase não se aplica: uma revisão é um processo. Revisões em paralelo são independentes porque cada uma escreve na própria pasta (`-2`, `-3` quando a data e o alvo se repetem). |
+| **IX. Descartabilidade** | Início rápido e parada limpa: Ctrl+C ou SIGTERM fecham o navegador antes de sair. O instalador pode ser rodado de novo sem efeito colateral (troca os arquivos e mantém `node_modules`). `ux-review desinstalar` desfaz a instalação e só apaga a memória se pedido. |
+| **X. Dev/prod semelhantes** | Os mesmos scripts rodam no repositório, na instalação e na CI, com as mesmas versões de axe-core, Playwright e Chromium. Um teste garante que a raiz e `suporte/` declaram as mesmas versões. A CI roda em Ubuntu e Windows. |
+| **XI. Logs** | Nenhum arquivo de log. Mensagens vão para a saída padrão, erros para a saída de erro, e o código de saída diz se deu certo. Os dados de cada revisão vão para arquivos da própria revisão, que são o produto, não log. `verificar --json` serve para máquina. |
+| **XII. Processos de admin** | Instalar, verificar, desinstalar, ver a configuração, calibrar e avaliar o banco de provas são comandos do mesmo repositório e da mesma versão, rodados uma vez quando necessário. |

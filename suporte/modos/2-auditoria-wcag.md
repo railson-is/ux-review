@@ -5,7 +5,7 @@ Verifica uma página (ou um conjunto pequeno de páginas e estados) contra os cr
 ## Entradas
 
 - URL (ou URLs) e, se houver, os estados a auditar: janela aberta, menu expandido, formulário com erro.
-- Ambiente e larguras (padrão: 320, 390, 768 e 1280 px).
+- Ambiente e larguras (padrão: 320, 390, 768 e 1280 px, ou `UXR_LARGURAS`).
 - Login, se precisar, pelas variáveis de ambiente (veja `seguranca.md`).
 
 ## Roteiro

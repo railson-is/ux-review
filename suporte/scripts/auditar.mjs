@@ -41,7 +41,8 @@ const tabLarguras = a['tab-larguras'] ? lista(a['tab-larguras']).map(Number) : [
 const borrar = a.borrar ? lista(a.borrar) : [];
 const prints = path.join(a.saida, 'prints');
 
-const nav = await abrirNavegador({ ambiente, permitirEscrita: a['permitir-escrita'] ? [new RegExp(a['permitir-escrita'])] : [] });
+// --permitir-escrita vale mais que UXR_PERMITIR_ESCRITA; sem nenhum dos dois, nada de escrita em produção.
+const nav = await abrirNavegador({ ambiente, permitirEscrita: a['permitir-escrita'] ? [new RegExp(a['permitir-escrita'])] : undefined });
 const resultado = {
   url: a.url,
   data: new Date().toISOString(),

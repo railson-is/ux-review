@@ -10,7 +10,7 @@ Copie a estrutura abaixo. Títulos de seção fixos; o validador procura "## O q
 - **Data:** AAAA-MM-DD
 - **Ambiente:** <local | homologacao | producao | nao-se-aplica>
 - **Larguras:** <320, 390, 768, 1280 px> (altura 800)
-- **Ferramentas:** <Playwright x.y.z, Chromium x, axe-core x.y.z>
+- **Ferramentas:** <ux-review x.y.z, Playwright x.y.z, Chromium x, axe-core x.y.z> (de `versoes` em medidas.json)
 - **Resultado:** <n> defeitos (<a> altas, <m> médias, <b> baixas) e <s> suspeitas
 
 ## O que corrigir primeiro

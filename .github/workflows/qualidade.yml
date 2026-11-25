@@ -1,0 +1,43 @@
+name: Qualidade
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qualidade-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testes:
+    name: Testes (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Testes de unidade
+        run: npm run testar
+      - name: Calibração dos scripts (mínimo de 10 defeitos, nenhuma armadilha)
+        run: node banco-de-provas/banco.mjs calibrar --minimo 10
+      - name: Conteúdo do pacote
+        run: npm pack --dry-run
+      - name: Instalar numa pasta temporária e verificar
+        shell: bash
+        run: |
+          node bin/ux-review.mjs instalar --destino "$RUNNER_TEMP/claude"
+          node bin/ux-review.mjs verificar --destino "$RUNNER_TEMP/claude"

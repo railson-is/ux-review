@@ -49,7 +49,7 @@ Exemplo do formato em `suporte/formato/exemplo/`.
 
 | Para | Precisa de |
 |---|---|
-| Todos os modos | Claude Code com suporte a subagentes com `memory` e `hooks` no frontmatter; Node.js 20 ou mais novo |
+| Todos os modos | Claude Code com suporte a subagentes com `memory` e `hooks` no frontmatter; Node.js 22 ou mais novo; Git (para o `npx github:`) |
 | Modos 1, 2 e 5 (navegador) | Playwright e Chromium, axe-core (o instalador baixa pelo npm, sem CDN) |
 | Modo 3 (PR) | [GitHub CLI](https://cli.github.com/) autenticado (`gh auth status`) com acesso de leitura ao repositório |
 | Modo 4 (Figma) | Conector oficial da Figma (servidor MCP) configurado no Claude Code, com acesso ao arquivo |
@@ -57,29 +57,33 @@ Exemplo do formato em `suporte/formato/exemplo/`.
 
 ## Instalação
 
-O instalador copia `agents/ux-review.md` para `~/.claude/agents/` e `suporte/` para `~/.claude/ux-review/`, preenche o caminho absoluto da pasta de apoio no agente e instala axe-core, Playwright e o Chromium do Playwright. Se `CLAUDE_CONFIG_DIR` estiver definida, ela substitui `~/.claude`. Uma reinstalação substitui os arquivos dessas duas pastas e mantém `node_modules`.
-
-Linux, macOS ou Git Bash:
+O ux-review é um pacote npm com uma CLI, `ux-review`. Ele roda direto do GitHub pelo `npx`, sem clonar e sem publicar no registro do npm:
 
 ```bash
-git clone https://github.com/railson-is/ux-review.git
-cd ux-review
-./instalar.sh
+npx github:railson-is/ux-review instalar
 ```
 
-Windows (PowerShell):
+O comando é o mesmo no bash e no PowerShell. Ele copia `agents/ux-review.md` para `~/.claude/agents/` e `suporte/` para `~/.claude/ux-review/`, preenche o caminho absoluto da pasta de apoio no agente e instala axe-core, Playwright e o Chromium do Playwright. Se `CLAUDE_CONFIG_DIR` estiver definida, ela substitui `~/.claude`. Depois, abra uma nova sessão do Claude Code: o agente aparece como `ux-review`.
 
-```powershell
-git clone https://github.com/railson-is/ux-review.git
-cd ux-review
-powershell -ExecutionPolicy Bypass -File .\instalar.ps1
+Sem versão, o `npx` usa o que estiver na `main`. Para uma instalação reproduzível, fixe a versão pela tag:
+
+```bash
+npx github:railson-is/ux-review#v0.2.0 instalar
 ```
 
-Opções: `--destino <pasta>` / `-Destino <pasta>` instala em outra pasta; `--sem-dependencias` / `-SemDependencias` pula o npm e o Chromium.
+Outros comandos da CLI:
 
-A pasta `suporte/` tem um `.npmrc` que fixa o registro público do npm, para que um registro privado configurado na máquina não interfira na instalação.
+| Comando | O que faz |
+|---|---|
+| `instalar [--destino <pasta>] [--sem-dependencias]` | Instala ou atualiza. Rodar de novo troca os arquivos e mantém `node_modules`. |
+| `verificar [--destino <pasta>] [--json]` | Diagnóstico: Node, dependências nas versões declaradas, Chromium, agente, guarda, configuração e `gh`. Sai com código 1 se algo obrigatório falhar. |
+| `desinstalar [--destino <pasta>] [--apagar-memoria] [--confirmar]` | Sem `--confirmar`, só mostra o que seria removido. A memória do agente fica, a menos que use `--apagar-memoria`. |
+| `config` | Mostra a configuração lida do ambiente, sem valores de credencial. |
+| `versao` / `ajuda` | Versão e ajuda. |
 
-Depois, abra uma nova sessão do Claude Code. O agente aparece como `ux-review`.
+Quem clonou o repositório pode usar os atalhos, que chamam a mesma CLI: `./instalar.sh` (bash) ou `powershell -ExecutionPolicy Bypass -File .\instalar.ps1` (Windows), com as mesmas opções (`-Destino`, `-SemDependencias` no PowerShell).
+
+**Registro do npm:** a instalação gera um `.npmrc` na pasta de apoio com o registro público, porque o npm não inclui `.npmrc` em pacotes. Assim um registro privado configurado na máquina não atrapalha a instalação das dependências.
 
 ## Login e credenciais
 
@@ -102,12 +106,29 @@ As variáveis valem só para aquele terminal e para o que for aberto a partir de
 
 Em produção (todo alvo que não seja localhost, `*.localhost`, `*.test` ou declarado homologação), o navegador de teste bloqueia requisições que não sejam GET e o agente não clica em nada que pague, confirme, envie ou finalize.
 
+## Configuração
+
+Tudo o que muda entre máquinas ou usos vem de variáveis de ambiente, com padrão. Valor inválido interrompe na hora, dizendo a variável e o motivo. `ux-review config` mostra o que está em vigor.
+
+| Variável | Padrão | Para que serve |
+|---|---|---|
+| `UXR_LARGURAS` | `320,390,768,1280` | Larguras em px, separadas por vírgula |
+| `UXR_ALTURA` | `800` | Altura da janela em px |
+| `UXR_TEMPO_LIMITE_MS` | `60000` | Tempo máximo para carregar uma página |
+| `UXR_VISIVEL` | `0` | `1` abre o navegador com janela, para depurar |
+| `UXR_PERMITIR_ESCRITA` | vazio | Expressão regular de URLs que podem receber POST em produção (ex.: o login) |
+| `UXR_PALAVRAS_DE_RISCO` | vazio | Palavras extras que bloqueiam cliques em produção, separadas por vírgula |
+| `UXR_USUARIO`, `UXR_SENHA` | vazio | Credenciais do alvo; nunca gravadas |
+| `CLAUDE_CONFIG_DIR` | `~/.claude` | Destino da instalação |
+| `UX_REVIEW_DIR` | `<CLAUDE_CONFIG_DIR>/ux-review` | Pasta de apoio usada pelos scripts de revisão |
+
+Um pedido explícito ao agente (ex.: "só em 360 px") vale mais que a variável.
+
 ## Personalização
 
 | O que | Onde |
 |---|---|
-| Larguras padrão | `LARGURAS_PADRAO` em `suporte/scripts/medidas.mjs` (ou peça outras larguras no pedido) |
-| Palavras que bloqueiam cliques em produção | `PALAVRAS_DE_RISCO` em `suporte/scripts/medidas.mjs` |
+| Larguras, altura, palavras de risco | Variáveis de ambiente (tabela acima) |
 | Régua de gravidade | `suporte/regras/gravidade.md` |
 | Formato do relatório | `suporte/formato/relatorio.md` e `suporte/formato/achados.md` |
 | O que a guarda bloqueia | `suporte/guardas/somente-leitura.mjs` |
@@ -115,6 +136,12 @@ Em produção (todo alvo que não seja localhost, `*.localhost`, `*.test` ou dec
 | Memória aprendida | `~/.claude/agent-memory/ux-review/` (pode ler, editar e apagar) |
 
 Depois de mudar algo, rode o instalador de novo e, se mexeu nas instruções, rode o banco de provas.
+
+## Versões e qualidade
+
+- **Versões:** seguem o Versionamento Semântico. Cada versão tem entrada no [CHANGELOG.md](CHANGELOG.md) e uma tag `vX.Y.Z`. A versão instalada fica em `~/.claude/ux-review/.versao` e aparece nas medidas de cada revisão (`versoes.uxReview`).
+- **CI:** a cada push e pull request, o GitHub Actions roda em Ubuntu e Windows os testes, a calibração do banco de provas (falha se os scripts detectarem menos de 10 defeitos ou marcarem alguma armadilha), a conferência do conteúdo do pacote e uma instalação completa seguida de `verificar`.
+- **12 fatores:** [docs/doze-fatores.md](docs/doze-fatores.md) mostra como cada fator da metodologia se aplica aqui e quais quase não se aplicam a um agente de linha de comando.
 
 ## Banco de provas
 

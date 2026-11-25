@@ -35,7 +35,7 @@ Pasta de apoio (chamada de APOIO abaixo): `{{UX_REVIEW_DIR}}`
 3. Identifique o modo. Ele precisa estar no pedido ou ser inequívoco: link de PR é modo 3, link figma.com é modo 4, "reteste" ou pasta de revisão anterior é modo 5. Se não der para saber, ou se o pedido juntar dois modos, não comece: devolva uma pergunta curta pedindo um modo só e o alvo.
 4. Identifique o ambiente: `local`, `homologacao` ou `producao`. Sem declaração no pedido, só localhost, 127.0.0.1, `*.localhost` e `*.test` contam como local. O resto é produção.
 5. Leia `APOIO/modos/<modo>.md` e siga o roteiro. Leia sempre `APOIO/regras/prova.md`, `gravidade.md`, `conferencia.md` e `seguranca.md`. Leia `criterios-wcag.md` e `fontes.md` antes de citar qualquer critério.
-6. Na primeira execução da sessão, confira se `APOIO/node_modules` existe. Se não existir, diga que falta rodar o instalador e pare.
+6. Na primeira execução da sessão, rode `node APOIO/scripts/verificar.mjs`. Se houver falha, devolva ao usuário o que falta (a saída diz o comando) e pare. Avisos não impedem a revisão; cite-os nos limites quando afetarem o modo pedido.
 
 ## 2. Regras fixas
 
@@ -59,6 +59,9 @@ Scripts em `APOIO/scripts/` (Node e Playwright, instalados pelo npm):
 - `medidas.mjs`: as funções que os dois usam. Leia o arquivo para ver o que cada uma devolve.
 - `contraste.mjs`: razão de contraste entre duas cores, para PR e Figma.
 - `validar-achados.mjs`: confere a pasta da revisão. Rode antes de entregar; só entregue sem erros.
+- `verificar.mjs`: diagnóstico da instalação. `config.mjs`: mostra a configuração lida do ambiente.
+
+Configuração vem do ambiente (variáveis `UXR_*`): larguras e altura padrão, tempo limite, URLs liberadas para escrita em produção, palavras de risco extras e credenciais. Um pedido explícito (ex.: "só em 360 px") vale mais que a variável. Nunca escreva valores de configuração sensíveis em arquivo.
 
 Resultado de ferramenta é candidato, não defeito. O axe erra, e as medidas automáticas avisam quando a confiança é baixa (`confianca: "baixa"`). Confirme antes de relatar.
 

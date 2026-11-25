@@ -21,10 +21,10 @@ const PRINTS = path.join(PASTA, 'prints');
 const CONFIG = {
   url: 'https://exemplo.com/',
   ambiente: undefined, // 'local' | 'homologacao' | 'producao'; sem valor, decide pela URL (na dúvida, produção)
-  larguras: m.LARGURAS_PADRAO,
-  altura: m.ALTURA_PADRAO,
+  larguras: m.LARGURAS_PADRAO, // UXR_LARGURAS
+  altura: m.ALTURA_PADRAO, // UXR_ALTURA
   borrar: [], // seletores extras com dado pessoal (ex.: '.nome-do-cliente')
-  permitirEscrita: [], // RegExp de URLs que podem receber POST em produção (ex.: /\/login$/)
+  permitirEscrita: m.CONFIG.permitirEscrita, // UXR_PERMITIR_ESCRITA: URLs que podem receber POST em produção (ex.: login)
 };
 
 // Cada passo recebe { page, ambiente, largura, registrar } e devolve nada.

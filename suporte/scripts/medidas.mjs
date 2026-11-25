@@ -5,18 +5,23 @@ import { createRequire } from 'node:module';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { lerConfig } from './config.mjs';
 
 const require = createRequire(import.meta.url);
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const UTILITARIOS = path.join(AQUI, 'no-navegador.js');
 const AXE = require.resolve('axe-core/axe.min.js');
 
-export const LARGURAS_PADRAO = [320, 390, 768, 1280];
-export const ALTURA_PADRAO = 800;
+// Lida uma vez, ao carregar: configuração inválida para aqui, com o motivo.
+export const CONFIG = lerConfig();
+export const LARGURAS_PADRAO = CONFIG.larguras;
+export const ALTURA_PADRAO = CONFIG.altura;
 export const TAGS_WCAG_AA = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 // Ações que, em produção, podem pagar, confirmar, enviar ou finalizar algo.
-export const PALAVRAS_DE_RISCO = /\b(pag(ar|ue|amento)|compr(ar|e|a)|finaliz(ar|e|a)|conclu(ir|a|i)|confirm(ar|e|a)|assin(ar|e|a)|contrat(ar|e|a)|envi(ar|e|a)|public(ar|ue|a)|exclu(ir|a|i)|apag(ar|ue|a)|delet(ar|e|a)|remov(er|a|e)|cancel(ar|e|a)|transfer(ir|a|e)|sac(ar|ue)|agend(ar|e|a)|reserv(ar|e|a)|checkout|pay|buy|purchase|order|confirm|submit|send|delete|remove|subscribe|book)\b/i;
+// UXR_PALAVRAS_DE_RISCO acrescenta palavras à lista.
+const RISCO_BASE = 'pag(ar|ue|amento)|compr(ar|e|a)|finaliz(ar|e|a)|conclu(ir|a|i)|confirm(ar|e|a)|assin(ar|e|a)|contrat(ar|e|a)|envi(ar|e|a)|public(ar|ue|a)|exclu(ir|a|i)|apag(ar|ue|a)|delet(ar|e|a)|remov(er|a|e)|cancel(ar|e|a)|transfer(ir|a|e)|sac(ar|ue)|agend(ar|e|a)|reserv(ar|e|a)|checkout|pay|buy|purchase|order|confirm|submit|send|delete|remove|subscribe|book';
+export const PALAVRAS_DE_RISCO = new RegExp(`\\b(${[RISCO_BASE, ...CONFIG.palavrasDeRiscoExtras].join('|')})\\b`, 'i');
 
 const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -43,9 +48,15 @@ export async function salvarJson(arquivo, dados) {
 // Abre o Chromium do Playwright. Em produção, bloqueia toda requisição que
 // não seja GET, HEAD ou OPTIONS, exceto as liberadas em permitirEscrita
 // (lista de RegExp, por exemplo a URL de login).
-export async function abrirNavegador({ ambiente = 'producao', permitirEscrita = [], visivel = !!process.env.UXR_VISIVEL } = {}) {
+// Ctrl+C ou SIGTERM fecham o navegador antes de sair (fator IX, descartabilidade).
+export async function abrirNavegador({ ambiente = 'producao', permitirEscrita = CONFIG.permitirEscrita, visivel = CONFIG.visivel } = {}) {
   const browser = await chromium.launch({ headless: !visivel });
   const bloqueadas = [];
+  const encerrar = (sinal) => {
+    browser.close().catch(() => {}).finally(() => process.exit(sinal === 'SIGINT' ? 130 : 143));
+  };
+  process.once('SIGINT', encerrar);
+  process.once('SIGTERM', encerrar);
 
   async function novaPagina({ largura = 1280, altura = ALTURA_PADRAO, estado } = {}) {
     const context = await browser.newContext({
@@ -75,12 +86,16 @@ export async function abrirNavegador({ ambiente = 'producao', permitirEscrita = 
     ambiente,
     novaPagina,
     bloqueadas,
-    fechar: () => browser.close(),
+    fechar: () => {
+      process.removeListener('SIGINT', encerrar);
+      process.removeListener('SIGTERM', encerrar);
+      return browser.close();
+    },
   };
 }
 
 export async function irPara(page, url, { esperaExtra = 500 } = {}) {
-  await page.goto(url, { waitUntil: 'load', timeout: 60000 });
+  await page.goto(url, { waitUntil: 'load', timeout: CONFIG.tempoLimiteMs });
   try { await page.waitForLoadState('networkidle', { timeout: 10000 }); } catch { /* páginas com conexão contínua */ }
   await pausa(esperaExtra);
   await garantirUtilitarios(page);
@@ -93,6 +108,7 @@ export async function garantirUtilitarios(page) {
 
 export async function versoes(navegador) {
   return {
+    uxReview: require('../package.json').version,
     playwright: require('playwright/package.json').version,
     axe: require('axe-core/package.json').version,
     navegador: `chromium ${navegador.browser.version()}`,

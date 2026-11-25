@@ -2,14 +2,15 @@
 // Banco de provas do ux-review: casos com resposta conhecida.
 //
 //   node banco-de-provas/banco.mjs servir [--porta 4173]
-//       Serve as páginas dos casos em http://localhost:<porta>/<caso>/
+//       Serve as páginas dos casos em http://localhost:<porta>/<caso>/ (porta também por PORT)
 //   node banco-de-provas/banco.mjs pedido <caso> [--porta 4173]
 //       Mostra o pedido para colar no Claude Code (e copia o diff do caso de PR
 //       para uma pasta temporária, longe do gabarito).
 //   node banco-de-provas/banco.mjs avaliar --caso <caso> --achados <achados.json> [--caso ... --achados ...] [--saida resultado.json]
 //       Compara os achados do agente com o gabarito: acertos, falsos positivos e falsos negativos.
-//   node banco-de-provas/banco.mjs calibrar [caso ...]
+//   node banco-de-provas/banco.mjs calibrar [caso ...] [--minimo N]
 //       Roda só os scripts de medição (sem o agente) e mostra o que eles detectam sozinhos.
+//       Com --minimo, sai com código 1 se detectar menos de N ou marcar alguma armadilha.
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
@@ -306,13 +307,15 @@ async function calibrar(casos) {
     servidor.close();
   }
   console.log(`\nScripts sozinhos: ${totalDetectado} de ${totalEsperado} defeitos detectados, ${totalArmadilhas} marcações indevidas (armadilhas ou fora do gabarito). O resto depende do roteiro e do julgamento do agente.`);
+  return { totalDetectado, totalEsperado, indevidas: totalArmadilhas };
 }
 
 // ---------- entrada ----------
 
 const { pos, a } = argumentos(process.argv.slice(2));
 const comando = pos.shift();
-const porta = Number(a.porta || 4173);
+// --porta, ou PORT do ambiente (fator VII), ou 4173.
+const porta = Number(a.porta || process.env.PORT || 4173);
 
 if (comando === 'servir') {
   const servidor = criarServidor();
@@ -328,7 +331,13 @@ if (comando === 'servir') {
 } else if (comando === 'avaliar') {
   await avaliar(a);
 } else if (comando === 'calibrar') {
-  await calibrar(pos.length ? pos : await listarCasos());
+  // --minimo N: falha (código 1) se os scripts detectarem menos de N defeitos
+  // ou marcarem qualquer armadilha. É o que a CI usa para pegar regressão.
+  const r = await calibrar(pos.length ? pos : await listarCasos());
+  if (a.minimo !== undefined && (r.totalDetectado < Number(a.minimo) || r.indevidas > 0)) {
+    console.error(`Calibração abaixo do mínimo: ${r.totalDetectado} detectados (mínimo ${a.minimo}), ${r.indevidas} marcações indevidas (máximo 0).`);
+    process.exit(1);
+  }
 } else {
   console.log('Comandos: servir | pedido <caso> | avaliar --caso <caso> --achados <arquivo> | calibrar [caso ...]');
   process.exit(comando ? 2 : 0);
